@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Món quà nhỏ dành cho bạn 💗</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 18px 12px;
+  font-family: Arial, sans-serif;
+  color: #70465b;
+  text-align: center;
+  background: linear-gradient(135deg, #ffe0ec, #eee5ff, #fff2df);
+}
+
+.container {
+  max-width: 850px;
+  margin: 15px auto;
+  padding: 26px 18px;
+  background: rgba(255,255,255,.94);
+  border-radius: 25px;
+  box-shadow: 0 10px 35px #a66d8c24;
+}
+
+.hidden { display: none !important; }
+
+h1 {
+  color: #e75480;
+  font-size: clamp(28px, 5vw, 40px);
+}
+
+p { line-height: 1.8; font-size: 17px; }
+
+.emoji { font-size: 48px; margin: 12px; }
+
+button {
+  border: 0;
+  border-radius: 30px;
+  padding: 13px 22px;
+  margin: 7px 4px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform .2s;
+}
+
+button:hover { transform: translateY(-2px); }
+
+.primary { background: #f477a5; color: white; }
+.secondary { background: #eee4ff; color: #704b92; }
+
+.music-button {
+  position: fixed;
+  z-index: 20;
+  top: 12px;
+  right: 12px;
+  background: white;
+  color: #d84e83;
+  box-shadow: 0 3px 14px #00000012;
+}
+
+/* Lưới ảnh */
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 25px 0;
+  align-items: stretch;
+}
+
+.photo-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 150px;
+  padding: 6px;
+  overflow: hidden;
+  background: #fff7fb;
+  border: 1px solid #f5dce8;
+  border-radius: 15px;
+}
+
+.photo-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 340px;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 10px;
+}
+
+.message {
+  padding: 20px;
+  background: #fff0f6;
+  border-radius: 18px;
+  line-height: 1.9;
+}
+
+.heart { animation: beat .8s infinite alternate; display: inline-block; }
+
+@keyframes beat {
+  to { transform: scale(1.2); }
+}
+
+.floating {
+  position: fixed;
+  top: -30px;
+  pointer-events: none;
+  z-index: 15;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(360deg); opacity: .1; }
+}
+
+footer {
+  margin-top: 22px;
+  color: #ad8b9f;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .container { padding: 23px 12px; }
+  .photo-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .photo-card { min-height: 110px; padding: 4px; }
+  .photo-card img { max-height: 300px; }
+  .music-button { top: 8px; right: 8px; padding: 10px 13px; }
+}
+</style>
+</head>
+
+<body>
+
+<button class="music-button" id="musicButton" onclick="toggleMusic()">
+  ♫ Bật nhạc
+</button>
+
+<audio id="birthdayMusic" loop preload="auto">
+  <source src="music/birthday.mp3" type="audio/mpeg">
+</audio>
+
+<main class="container">
+
+  <section id="screen1">
+    <div class="emoji">🎁💗🎂</div>
+    <h1>Chúc mừng sinh nhật Bảo Hân (Tuất) 🎂🎁</h1>
+    <p>
+      Có một món quà bí mật đang chờ bạn khám phá.
+      <br>Sẵn sàng chưa nào? 🤭
+    </p>
+    <button class="primary" onclick="openGift()">Mở quà ngay 🎀</button>
+  </section>
+
+  <section id="screen2" class="hidden">
+    <div class="emoji">😳✨</div>
+    <h1>Khoan đã!</h1>
+    <p>
+      Muốn nhận quà thì phải vượt qua một thử thách nhỏ.
+      <br>Nhấn nút bên dưới nhé!
+    </p>
+    <button class="primary" onclick="tease()">Nhận quà của tôi 💝</button>
+    <p id="teaseText"></p>
+    <button id="continueBtn" class="secondary hidden" onclick="showGift()">
+      Thôi được rồi, xem quà đi 😂
+    </button>
+  </section>
+
+  <section id="screen3" class="hidden">
+    <div class="emoji">💐🥳💖</div>
+    <h1>Surprise! 🎉</h1>
+    <p>Chúc bạn luôn vui vẻ, xinh đẹp và gặp nhiều điều tốt đẹp!</p>
+
+    <div class="photo-gallery" id="photoGallery"></div>
+
+    <div class="message">
+      <h2>💌 Gửi bạn</h2>
+      Mong rằng mỗi ngày của bạn đều có thật nhiều niềm vui,
+      luôn có người quan tâm, yêu thương và ở bên khi cần.
+      <br>
+      Chúc mọi điều tốt đẹp sẽ đến với bạn nhé!
+      <span class="heart">❤️</span>
+    </div>
+
+    <button class="primary" onclick="celebrate()">Thêm chút phép màu ✨</button>
+    <button class="secondary" onclick="location.reload()">Xem lại từ đầu 🔄</button>
+  </section>
+
+  <footer>Made with 💗 dành riêng cho bạn</footer>
+</main>
+
+<script>
+/*
+  Tên 9 ảnh trong thư mục images.
+  Nếu tên ảnh trên máy khác, sửa đúng tên trong danh sách này.
+*/
+const photos = [
+  "1791851441795.jpg",
+  "IMG_20260722_210721.jpg",
+  "IMG_20260722_210752.jpg",
+  "Screenshot_2026-07-06-22-19-41-082_com.ss.android.ugc.trill.jpg",
+  "Screenshot_2026-07-18-21-36-32-041_com.ss.android.ugc.trill-edit.jpg",
+  "Screenshot_2026-07-26-10-26-33-611_com.ss.android.ugc.trill.jpg",
+  "Screenshot_2026-07-27-02-58-15-477_com.ss.android.ugc.trill.jpg",
+  "Screenshot_2026-07-27-08-18-41-802_com.ss.android.ugc.trill.jpg",
+  "Screenshot_2026-10-24-17-30-04-216_com.ss.android.ugc.trill.jpg"
+];
+
+let teaseCount = 0;
+const audio = document.getElementById("birthdayMusic");
+const musicButton = document.getElementById("musicButton");
+
+function switchScreen(number) {
+  document.querySelectorAll("main section").forEach(section => {
+    section.classList.add("hidden");
+  });
+  document.getElementById("screen" + number).classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+async function startMusic() {
+  try {
+    await audio.play();
+    musicButton.textContent = "♫ Tắt nhạc";
+  } catch (error) {
+    musicButton.textContent = "♫ Bật nhạc";
+  }
+}
+
+function openGift() {
+  switchScreen(2);
+  startMusic();
+}
+
+async function toggleMusic() {
+  if (audio.paused) {
+    await startMusic();
+  } else {
+    audio.pause();
+    musicButton.textContent = "♫ Bật nhạc";
+  }
+}
+
+function tease() {
+  teaseCount++;
+
+  const messages = [
+    "Ơ kìa, chưa được đâu! Nhấn thêm lần nữa xem 😂",
+    "Sắp được rồi... chắc vậy á 🤣",
+    "Thôi không trêu nữa, quà của bạn đây! 🎁"
+  ];
+
+  document.getElementById("teaseText").textContent =
+    messages[Math.min(teaseCount - 1, messages.length - 1)];
+
+  if (teaseCount >= 3) {
+    document.getElementById("continueBtn").classList.remove("hidden");
+  }
+}
+
+function showGift() {
+  switchScreen(3);
+}
+
+function renderPhotos() {
+  const gallery = document.getElementById("photoGallery");
+
+  photos.forEach((filename, index) => {
+    const card = document.createElement("div");
+    card.className = "photo-card";
+
+    const img = document.createElement("img");
+    img.src = "images/" + filename;
+    img.alt = "Ảnh kỷ niệm " + (index + 1);
+    img.loading = "lazy";
+
+    img.onerror = function() {
+      card.style.display = "none";
+      console.warn("Không tìm thấy ảnh:", filename);
+    };
+
+    card.appendChild(img);
+    gallery.appendChild(card);
+  });
+}
+
+function celebrate() {
+  const decorations = ["💗", "💖", "💕", "🌸", "✨", "🎉"];
+
+  for (let i = 0; i < 45; i++) {
+    const item = document.createElement("span");
+    item.className = "floating";
+    item.textContent = decorations[Math.floor(Math.random() * decorations.length)];
+    item.style.left = Math.random() * 100 + "vw";
+    item.style.fontSize = (16 + Math.random() * 20) + "px";
+    item.style.animationDuration = (3 + Math.random() * 4) + "s";
+    document.body.appendChild(item);
+    item.addEventListener("animationend", () => item.remove());
+  }
+}
+
+renderPhotos();
+</script>
+</body>
+</html>
